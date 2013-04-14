@@ -1,0 +1,9 @@
+bin/main/Entry.class
+bin/main/Entry$Value.class
+bin/main/Logger.class
+bin/main/Move.class
+bin/main/Solver.class
+bin/main/SolverTest.class
+bin/main/Stats.class
+bin/main/Tableau.class
+bin/main/Tableau$Helper.class
