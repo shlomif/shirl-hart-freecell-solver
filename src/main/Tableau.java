@@ -54,9 +54,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
 public class Tableau {
-	
+
 	int[][] tableau;
-	
+
 	private static final int MAXCOLS = 8;
 	private static final int MAXROWS = 21;
 	private static final int HOMEOFFSET = 4;
@@ -72,15 +72,15 @@ public class Tableau {
 	public static int fromCard (String str) {
 		if (str.trim().isEmpty())
 			return 0;
-		else 
-			return fromRank.get(str.substring(0,1)) + 
+		else
+			return fromRank.get(str.substring(0,1)) +
 				   fromSuit.get(str.substring(1,2)) * 16 + 64;
 	}
-	
+
 	private static final Pattern expression = Pattern.compile("(..) ?");
 
-	private static final Map<String, Integer> fromSuit = 
-				ImmutableMap.of("D", 0, "C", 1, "H", 2, "S", 3, " ", 0); 
+	private static final Map<String, Integer> fromSuit =
+				ImmutableMap.of("D", 0, "C", 1, "H", 2, "S", 3, " ", 0);
 
 	private static final Map<String, Integer> fromRank = new ImmutableMap.Builder<String, Integer>()
 		.putAll(ImmutableMap.of("A",  1, "2",  2, "3",  3, "4",  4, "5",  5))
@@ -88,17 +88,17 @@ public class Tableau {
 		.putAll(ImmutableMap.of("J", 11, "Q", 12, "K", 13, " ",  0))
 		.build();
 
-	private static final Map<Integer, String> toSuit = 
-				ImmutableMap.of(0, "D", 1, "C", 2, "H", 3, "S"); 
-	
+	private static final Map<Integer, String> toSuit =
+				ImmutableMap.of(0, "D", 1, "C", 2, "H", 3, "S");
+
 	private static final Map<Integer, String> toRank = new ImmutableMap.Builder<Integer, String>()
 		.putAll(ImmutableMap.of( 1, "A",  2, "2",  3, "3",  4, "4",  5, "5"))
 		.putAll(ImmutableMap.of( 6, "6",  7, "7",  8, "8",  9, "9", 10, "T"))
 		.putAll(ImmutableMap.of(11, "J", 12, "Q", 13, "K"))
 		.build();
 
-	private static final Map<Integer, String> ABCD = 
-				ImmutableMap.of(0, "a", 1, "b", 2, "c", 3, "d"); 
+	private static final Map<Integer, String> ABCD =
+				ImmutableMap.of(0, "a", 1, "b", 2, "c", 3, "d");
 
 //			  card->key     A    2    3    4    5    6    7    8    9    T    J    Q    K
 //			    ....0000 0001 0010 0011 0100 0101 0110 0111 1000 1001 1010 1011 1100 1101
@@ -106,19 +106,19 @@ public class Tableau {
 //		 80	  C 0101....    Q    R    S    T    U    V    W    X    Y    Z    [    \    ]
 //		 96	  H 0110....    a    b    c    d    e    f    g    h    i    j    k    l    m
 //		112	  S 0111....    q    r    s    t    u    v    w    x    y    z    {    |    }
-	
+
 
 	public Tableau (){
 
 		tableau = new int[8][21];
 	}
-	
+
 	public void deal (long seed){
 		int[] deck = new int[52];
 		for (int i = 0; i < 52; i++){
 			deck[i] = i;
 		}
-		
+
 		int wLeft = 52;
 		for (int i = 0; i < 52; i++){
 			seed = (seed * 214013L + 2531011L) % 2147483648L; // (long)Math.pow(2,31);
@@ -128,9 +128,9 @@ public class Tableau {
 			deck[j] = deck[--wLeft];
 		}
 	}
-	
+
 	public int[] heuristic () {
-		
+
 		Helper h = new Helper(tableau);
 
 		int score = 64;
@@ -151,7 +151,7 @@ public class Tableau {
 				} // major sequence break if src >= dst
 			}
 		}
-		
+
         int recurse = 0;
 //		for (int c = 0; c < MAXCOLS; c++){
 //		        for (int r = 1; r  < h.z[c]; r++){
@@ -162,8 +162,8 @@ public class Tableau {
 
         return new int[]{score + brk, score + brk + seq, score + recurse / 16};
 	}
-	
-	@Override 
+
+	@Override
 	public String toString () {
 		StringBuilder sb = new StringBuilder();
 		for (int r = 0; r < MAXROWS; r++) {
@@ -184,7 +184,7 @@ public class Tableau {
 		sb.setLength(sb.length() - 28);
 		return sb.toString();
 	}
-	
+
 	public void fromString(String input) {
 		String[] str = input.split("\r\n");
 		int r = 0;
@@ -199,7 +199,7 @@ public class Tableau {
 		}
 
 //		# fix home if out of order
-//	    
+//
 //	    my %home = map {
 //	        my $card = $self->[$_][0];
 //	        suit($card) + 4, $card;
@@ -220,7 +220,7 @@ public class Tableau {
 		int offset = cascades[0].length() - 1;
 		for (int i = 1; i < cascades.length; i++){
 			for (int j = 0; j < cascades[i].length(); j++){
-				tableau[entry.value.token[i + offset]][j + 1] = cascades[i].charAt(j); 
+				tableau[entry.value.token[i + offset]][j + 1] = cascades[i].charAt(j);
 			}
 		}
 	}
@@ -229,15 +229,15 @@ public class Tableau {
 		tableau[move.dstCol][move.dstRow] = tableau[move.srcCol][move.srcRow];
 		tableau[move.srcCol][move.srcRow] = 0;
 	}
-	
+
 	public void undo (ArrayList<Move> node){
 		ListIterator<Move> i = node.listIterator(node.size());
 		while (i.hasPrevious()){
 			Move move = i.previous();
 			tableau[move.srcCol][move.srcRow] = tableau[move.dstCol][move.dstRow];
 
-			if (move.dstRow == 0 
-			&&  move.dstCol >= HOMEOFFSET 
+			if (move.dstRow == 0
+			&&  move.dstCol >= HOMEOFFSET
 			&&  rank(tableau[move.dstCol][0]) > 1) { // homecell > Ace
 				tableau[move.dstCol][move.dstRow]--;
 			} else {
@@ -245,7 +245,7 @@ public class Tableau {
 			}
 		}
 	}
-	
+
 	public void autoplay (ArrayList<Move> node){
 		int safe = 1;
 		while (safe == 1) {
@@ -254,8 +254,8 @@ public class Tableau {
 				int src = tableau[c][0];
 				if (src == 0)
 					continue;
-				
-				if (rank(src) == rank(tableau[suit(src) + HOMEOFFSET][0]) + 1 
+
+				if (rank(src) == rank(tableau[suit(src) + HOMEOFFSET][0]) + 1
 				&& (rank(src) < 3 || adjacentHomecells(src))) {
 					Move move = new Move(c, 0, suit(src) + HOMEOFFSET, 0, "afh");
 					node.add(move);
@@ -271,8 +271,8 @@ public class Tableau {
 				if (r == 0)
 					continue;
 				int src = tableau[c][r];
-				
-				if (rank(src) == rank(tableau[suit(src) + HOMEOFFSET][0]) + 1 
+
+				if (rank(src) == rank(tableau[suit(src) + HOMEOFFSET][0]) + 1
 				&& (rank(src) < 3 || adjacentHomecells(src))) {
 					Move move = new Move(c, r, suit(src) + HOMEOFFSET, 0, "ach");
 					node.add(move);
@@ -285,11 +285,11 @@ public class Tableau {
 
 	public boolean adjacentHomecells (int src){
 		boolean ok = false;
-		if ((src & 16) == 0 
-		&& rank(src) <= rank(tableau[5][0]) + 1 
+		if ((src & 16) == 0
+		&& rank(src) <= rank(tableau[5][0]) + 1
 		&& rank(src) <= rank(tableau[7][0]) + 1
-		||  (src & 16) != 0 
-		&& rank(src) <= rank(tableau[4][0]) + 1 
+		||  (src & 16) != 0
+		&& rank(src) <= rank(tableau[4][0]) + 1
 		&& rank(src) <= rank(tableau[6][0]) + 1)
 			ok = true;
 		return ok;
@@ -298,18 +298,18 @@ public class Tableau {
 	public ArrayList<ArrayList<Move>> generateNodelist2 (boolean winxpopt){
 		ArrayList<ArrayList<Move>> nodelist = new ArrayList<ArrayList<Move>>();
 		ArrayList<Move> node;
-		
+
 		Helper h = new Helper(tableau);
-		
+
 		// generate nodelist, src is freecell
 		for (int c = 0; c < HOMEOFFSET; c++){
 			int src = tableau[c][0];
 			if (src == 0)
 				continue;
-			
+
 			if (rank(src) - 1 == rank(tableau[suit(src) + HOMEOFFSET][0])){
 				node = new ArrayList<Move>();
-				node.add(new Move(c, 0, suit(src) + HOMEOFFSET, 0, "fh")); 
+				node.add(new Move(c, 0, suit(src) + HOMEOFFSET, 0, "fh"));
 				nodelist.add(node);
 			}
 
@@ -317,13 +317,13 @@ public class Tableau {
 				node = new ArrayList<Move>();
 				node.add(new Move(c, 0, h.eindex, 1, "fe"));
 				nodelist.add(node);
-			}			
-			
+			}
+
 			for (int j = 0; j < MAXCOLS; j++){
 				if (h.z[j] == 0)
 					continue;
 				int dst = tableau[j][h.z[j]];
-			
+
 				if (inSequence(src, dst)){
 					node = new ArrayList<Move>();
 					node.add(new Move(c, 0, j, h.z[j] + 1, "fc"));
@@ -331,7 +331,7 @@ public class Tableau {
 				}
 			}
 		}
-		
+
 		// generate nodelist, src is column
 		for (int c = 0; c < MAXCOLS; c++) {
 			if (h.z[c] == 0)
@@ -343,7 +343,7 @@ public class Tableau {
 				node.add(new Move(c, h.z[c], suit(src) + HOMEOFFSET, 0, "ch"));
 				nodelist.add(node);
 			}
-			
+
 			if (h.fcount > 0){
 				node = new ArrayList<Move>();
 				node.add(new Move(c, h.z[c], h.findex, 0, "cf"));
@@ -358,15 +358,15 @@ public class Tableau {
 					if ((winxpopt ? 1 : h.ecount) * (h.fcount + 1) > h.z[c] - k ) {
 						node = new ArrayList<Move>();  								// e*(f+1)
 						for (int x = k, y = 1; x <= h.z[c]; ){
-							node.add(new Move(c, x++, h.eindex, y++, "ce"));								
+							node.add(new Move(c, x++, h.eindex, y++, "ce"));
 						}
 						nodelist.add(node);
 					}
-				}	
+				}
 			}
 			// super move to column
 			for (int j = 0; j < MAXCOLS; j++) {
-				if (c == j 
+				if (c == j
 				||  h.z[j] == 0)
 					continue;
 
@@ -375,21 +375,21 @@ public class Tableau {
 						break;
 					}
 
-					if (inSequence(tableau[c][k], tableau[j][h.z[j]]) 
+					if (inSequence(tableau[c][k], tableau[j][h.z[j]])
 					&& ((winxpopt ? Math.min(1, h.ecount) : h.ecount) + 1) * (h.fcount + 1) > h.z[c] - k){
 						node = new ArrayList<Move>(); 								// (e+1)*(f+1)
 						for (int x = k, y = h.z[j] + 1; x <= h.z[c]; ){
-							node.add(new Move(c, x++, j, y++, "cc"));							
+							node.add(new Move(c, x++, j, y++, "cc"));
 						}
 						nodelist.add(node);
 						break;
 					}
 				}
 			}
-		}			
+		}
 		return nodelist;
 	}
-	
+
 	public String notation (Entry entry){
 		List<String> result = new ArrayList<String>();
 		Tableau note = new Tableau();
@@ -398,11 +398,11 @@ public class Tableau {
 		for (int c = 0; c < MAXCOLS; c++)
 			for (int r = 0; r < MAXROWS; r++)
 				note.tableau[c][r] = this.tableau[c][r];
-		
+
 		// standard notation
 		String stdSrc = new String();
 		String stdDst = new String();
-		
+
 		// descriptive notation
 		List<String> dscSrc = new ArrayList<String>();
 		String dscDst = new String();
@@ -419,7 +419,7 @@ public class Tableau {
 												   : ABCD.get(move.srcCol);
 
 				stdDst  = move.dstRow > 0          ? Integer.toString(move.dstCol + 1)
-						: move.dstCol < HOMEOFFSET ? ABCD.get(move.dstCol) 
+						: move.dstCol < HOMEOFFSET ? ABCD.get(move.dstCol)
 												   : "h";
 
 				dscDst  = move.dstRow == 1         ? "e"
@@ -427,7 +427,7 @@ public class Tableau {
 						: stdDst.equals("h")       ? "h"
 												   : "f";
 			}
-			
+
 			int homeSuit = suit(note.tableau[move.srcCol][move.srcRow]);
 			if(move.origin.startsWith("a")){ // autoplay to home
 				if ( autoPlay.containsKey(homeSuit) ){
@@ -447,7 +447,7 @@ public class Tableau {
 			autoSrc.add(cardArray.get(0) + (cardArray.size() > 1 ?
 				"-" + Iterables.getLast(cardArray) : ""));
 		}
-		
+
 		result.add(Integer.toString(entry.value.depth));
 		result.add(stdSrc + stdDst);
 		result.add(dscSrc.get(0) + (dscSrc.size() > 1 ?
@@ -455,12 +455,12 @@ public class Tableau {
 		result.add(dscDst);
 		result.add(autoSrc.size() > 0 ?
 			Joiner.on(';').join(autoSrc.toArray()) : "");
-		
+
 		return Joiner.on('|').join(result.toArray());
 	}
-	
+
 	public String toCard(Integer c, Integer r){
-		return  toRank.get( tableau[c][r]       & 15) + 
+		return  toRank.get( tableau[c][r]       & 15) +
 				toSuit.get((tableau[c][r] >> 4) &  3);
 	}
 
@@ -479,7 +479,7 @@ public class Tableau {
 					z[c] = r;
 				}
 
-				if (c < HOMEOFFSET 
+				if (c < HOMEOFFSET
 				&& tableau[c][0] == 0) {
 					fcount++;
 					if (findex < 0)

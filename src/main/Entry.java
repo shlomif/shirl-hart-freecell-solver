@@ -60,7 +60,7 @@ public class Entry {
 		this.key = line[0];
 		this.value = new Value();
 
-		for (int i = 1; i < line.length; i++) 
+		for (int i = 1; i < line.length; i++)
 			value.token[i - 1] = Integer.parseInt(line[i]);
 	}
 
@@ -68,27 +68,27 @@ public class Entry {
 		this.key = key;
 		this.value = value;
 	}
-	
+
 	public Entry (Tableau tableau) {
 		Map<String, Integer> map = new TreeMap<String, Integer>();
 		StringBuilder sb = new StringBuilder();
 		this.value = new Value();
 		this.value.token = new int[16];
-		
+
 		for (int c = 0; c < MAXCOLS; c++) {
 			int i = tableau.tableau[c][0];
 			if (i != 0){
 				map.put(Character.toString((char) i), c);
 			}
 		}
-		
+
 		int j = 0;
 		for (Map.Entry<String, Integer> entry : map.entrySet()){
 			value.token[j++] = entry.getValue();
 		}
 		key = Joiner.on("").join(map.keySet());
 		map.clear();
-		
+
 		for (int c = 0; c < MAXCOLS; c++) {
 			for (int r = 1; r < MAXROWS; r++) {
 				int i = tableau.tableau[c][r];
@@ -114,7 +114,7 @@ public class Entry {
 		public int[] score;
 		public ArrayList<Move> node;
 
-		@Override 
+		@Override
 		public String toString (){
 			return Objects.toStringHelper(this)
 				.add("token", Arrays.toString(token))

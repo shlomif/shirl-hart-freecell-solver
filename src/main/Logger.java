@@ -46,20 +46,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Logger {
-	
+
 	private FileWriter log;
-	
+
 	private final Format formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private final String logfile   = "fc$log.txt";
 
 	public Logger () {
-		try { 
+		try {
 			log = new FileWriter(logfile, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void log (String line) {
 		String info = String.format("%s INFO ", formatter.format(new Date()));
 		try {
@@ -69,7 +69,7 @@ public class Logger {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void close () {
 		try {
 			log.close();
