@@ -47,7 +47,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 public class Entry {
 	private static final int MAXCOLS = 8;
@@ -116,7 +116,7 @@ public class Entry {
 
 		@Override
 		public String toString (){
-			return Objects.toStringHelper(this)
+			return MoreObjects.toStringHelper(this)
 				.add("token", Arrays.toString(token))
 				.add("depth", depth)
 				.add("level", level)

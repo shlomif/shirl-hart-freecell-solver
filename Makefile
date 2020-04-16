@@ -14,7 +14,7 @@ all: java_bins
 java_bins: $(JAVA_BINS)
 
 $(JAVA_BINS): bin/%.class: src/%.java
-	javac -d bin $(JAVA_SRCS)
+	javac -Xlint:deprecation -d bin $(JAVA_SRCS)
 
 .PHONY: java_bins
 
