@@ -116,7 +116,8 @@ public class Solver {
 	}
 
 	public void run() throws Exception {
-		if (gameno == 0) {
+		// if (gameno == 0) {
+		if (false) {
 			System.out.println("Please use options:\n\n" +
 				"  java [ -d64 -Xmx6g ] -jar fcsolver.jar " +
 				"--gameno <1-1000000> [ --maxnodes <2000-100000> ] "+
@@ -257,6 +258,7 @@ public class Solver {
 				upload.close();
 			}
 			logger.close();
+			if (gameno <= 0) break;
 			if (++gameno % blocksolve == 0) break;
 	  }
 	}

@@ -6,4 +6,4 @@
 # Distributed under terms of the MIT license.
 #
 
-CLASSPATH="$CLASSPATH:$PWD/bin" java -d64 -Xmx4g main.Solver --gameno 1
+CLASSPATH="$CLASSPATH:$PWD/bin" java -d64 -Xmx4g main.Solver --gameno 0
