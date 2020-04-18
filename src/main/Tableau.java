@@ -115,6 +115,10 @@ public class Tableau {
 		tableau = new int[8][21];
 	}
 
+	private void setTableauCard(int row, int height, int val) {
+		tableau[row][COLUMNS_HEIGHT_OFFSET + height] = val;
+	}
+
 	public void deal (long seed){
 		int[] deck = new int[52];
 		for (int i = 0; i < 52; i++){
@@ -125,8 +129,10 @@ public class Tableau {
 		for (int i = 0; i < 52; i++){
 			seed = (seed * 214013L + 2531011L) % 2147483648L; // (long)Math.pow(2,31);
 			int j = (int)(seed >> 16) % wLeft;
-			tableau[i % 8][COLUMNS_HEIGHT_OFFSET + i / 8] = 65 + deck[j] / 4 + 16 * // switch C & D
+			int val = 65 + deck[j] / 4 + 16 * // switch C & D
 					(deck[j] % 4 == 0 ? 1 : deck[j] % 4 == 1 ? 0 : deck[j] % 4);
+
+			setTableauCard(i % 8, i / 8, val);
 			deck[j] = deck[--wLeft];
 		}
 	}
@@ -189,12 +195,12 @@ public class Tableau {
 
 	public void fromString(String input) {
 		String[] str = input.split("\r\n");
-		int r = COLUMNS_HEIGHT_OFFSET;
+		int r = 0;
 		for (int i = 0; i < str.length; i++) {
 			Matcher matcher = expression.matcher(str[i]);
 			int c = 0;
 			while (matcher.find()) {
-				tableau[c][r] = fromCard(matcher.group());
+				setTableauCard(c, r, fromCard(matcher.group()));
 				c++;
 			}
 			r++;
