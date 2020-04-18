@@ -79,7 +79,7 @@ public class Tableau {
 
 	private static final int COLUMNS_HEIGHT_OFFSET = 1;
 
-	private static final Pattern expression = Pattern.compile("(..) ?");
+	private static final Pattern expression = Pattern.compile("(\\S\\S) ?");
 
 	private static final Map<String, Integer> fromSuit =
 				ImmutableMap.of("D", 0, "C", 1, "H", 2, "S", 3, " ", 0);

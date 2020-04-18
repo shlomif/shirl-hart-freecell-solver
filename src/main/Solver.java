@@ -44,6 +44,11 @@ package main;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,6 +65,9 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
 public class Solver {
+
+	@Parameter(names = "--colsboardfile", description = "columns input file path")
+	private String colsboardfile;
 
 	@Parameter(names = "--gameno", description = "Microsoft Freecell gameno")
 	private int gameno;
@@ -115,6 +123,17 @@ public class Solver {
 		}
 	}
 
+	/*
+	 * Based on https://stackoverflow.com/questions/326390/how-do-i-create-a-java-string-from-the-contents-of-a-file
+	 * Thanks!
+	 * */
+	static String readFile(String path, Charset encoding)
+			throws IOException
+	{
+		byte[] encoded = Files.readAllBytes(Paths.get(path));
+		return new String(encoded, encoding);
+	}
+
 	public void run() throws Exception {
 		// if (gameno == 0) {
 		if (false) {
@@ -152,7 +171,14 @@ public class Solver {
 			if (gameno > 0)
 				tableau.deal(gameno);
 			else
-				tableau.fromString(input);
+			{
+				String board = input;
+				if (colsboardfile.length() > 0)
+				{
+					board = readFile(colsboardfile, StandardCharsets.US_ASCII);
+				}
+				tableau.fromString(board);
+			}
 
 			// store initial tableau entry into position hash
 			Entry entre = new Entry(tableau);
