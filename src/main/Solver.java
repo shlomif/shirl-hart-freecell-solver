@@ -173,7 +173,7 @@ public class Solver {
 			else
 			{
 				String board = input;
-				if (colsboardfile.length() > 0)
+				if (colsboardfile != null)
 				{
 					board = readFile(colsboardfile, StandardCharsets.US_ASCII);
 				}
