@@ -77,6 +77,8 @@ public class Tableau {
 				   fromSuit.get(str.substring(1,2)) * 16 + 64;
 	}
 
+	private static final int COLUMNS_HEIGHT_OFFSET = 1;
+
 	private static final Pattern expression = Pattern.compile("(..) ?");
 
 	private static final Map<String, Integer> fromSuit =
@@ -123,7 +125,7 @@ public class Tableau {
 		for (int i = 0; i < 52; i++){
 			seed = (seed * 214013L + 2531011L) % 2147483648L; // (long)Math.pow(2,31);
 			int j = (int)(seed >> 16) % wLeft;
-			tableau[i % 8][1+ i / 8] = 65 + deck[j] / 4 + 16 * // switch C & D
+			tableau[i % 8][COLUMNS_HEIGHT_OFFSET + i / 8] = 65 + deck[j] / 4 + 16 * // switch C & D
 					(deck[j] % 4 == 0 ? 1 : deck[j] % 4 == 1 ? 0 : deck[j] % 4);
 			deck[j] = deck[--wLeft];
 		}
@@ -187,7 +189,7 @@ public class Tableau {
 
 	public void fromString(String input) {
 		String[] str = input.split("\r\n");
-		int r = 0;
+		int r = COLUMNS_HEIGHT_OFFSET;
 		for (int i = 0; i < str.length; i++) {
 			Matcher matcher = expression.matcher(str[i]);
 			int c = 0;
