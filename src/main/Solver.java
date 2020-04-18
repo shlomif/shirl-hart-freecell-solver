@@ -177,6 +177,11 @@ public class Solver {
 				{
 					board = readFile(colsboardfile, StandardCharsets.US_ASCII);
 				}
+				else
+				{
+					System.err.println("Must specify --colsboardfile!");
+					System.exit(1);
+				}
 				tableau.fromString(board);
 			}
 
