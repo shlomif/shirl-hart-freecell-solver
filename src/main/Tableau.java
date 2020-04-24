@@ -219,6 +219,19 @@ public class Tableau {
 
 	}
 
+	public void fromFcSolveString(String input)
+	{
+		String[] lines = input.split("\n");
+		for (int col_idx = 0; col_idx < lines.length; col_idx++) {
+			Matcher matcher = expression.matcher(lines[col_idx]);
+			int height = 0;
+			while (matcher.find()) {
+				setTableauCard(col_idx, height, fromCard(matcher.group()));
+				height++;
+			}
+		}
+	}
+
 	public void fromToken (Entry entry){
 		String[] cascades = entry.key.split(" ");
 		for (int i = 0; i < cascades[0].length(); i++){

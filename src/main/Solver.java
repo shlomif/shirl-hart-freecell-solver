@@ -66,6 +66,9 @@ import com.google.common.collect.Iterables;
 
 public class Solver {
 
+	@Parameter(names = "--rowsboardfile", description = "fc-solve-like rows input file path")
+	private String rowsboardfile;
+
 	@Parameter(names = "--colsboardfile", description = "columns input file path")
 	private String colsboardfile;
 
@@ -176,13 +179,18 @@ public class Solver {
 				if (colsboardfile != null)
 				{
 					board = readFile(colsboardfile, StandardCharsets.US_ASCII);
+					tableau.fromString(board);
+				}
+				else if (rowsboardfile != null)
+				{
+					String s = readFile(rowsboardfile, StandardCharsets.US_ASCII);
+					tableau.fromFcSolveString(s);
 				}
 				else
 				{
-					System.err.println("Must specify --colsboardfile!");
+					System.err.println("Must specify --colsboardfile or --rowsboardfile!");
 					System.exit(1);
 				}
-				tableau.fromString(board);
 			}
 
 			// store initial tableau entry into position hash
