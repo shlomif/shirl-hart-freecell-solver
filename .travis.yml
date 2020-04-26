@@ -1,5 +1,5 @@
 install:
-    - if test "$WHAT" = "normal"; then . fc-solve/scripts/ci-install-stage.bash ; elif test "$WHAT" = "buildproc"; then . fc-solve/scripts/ci-docker-test--install.bash ; fi
+    - if test "$WHAT" = "normal"; then . ci-install-stage.bash ; elif test "$WHAT" = "buildproc"; then . ci-docker-test--install.bash ; fi
 matrix:
     include:
         - os: linux
@@ -8,5 +8,5 @@ matrix:
 services:
     - docker
 script:
-    - if test "$WHAT" = "normal"; then export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml" ; bash fc-solve/scripts/run-ci-tests.bash ; elif test "$WHAT" = "buildproc" ; then cd . && perl test-using-docker.pl ; fi
+    - if test "$WHAT" = "normal"; then export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml" ; bash run-ci-tests.bash ; elif test "$WHAT" = "buildproc" ; then cd . && perl test-using-docker.pl ; fi
 sudo: required
