@@ -118,7 +118,7 @@ public class Solver {
 	public static void main(String[] args) {
 //		new Solver().debug(); System.exit(1);
 		Solver solver = new Solver();
-		new JCommander(solver, args);
+		JCommander.newBuilder().addObject(solver).build().parse(args);
 		try {
 			solver.run();
 		} catch (Exception e) {
