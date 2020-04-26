@@ -29,6 +29,8 @@ sub do_system
 my @deps = qw(
     beust-jcommander
     guava
+    java-1.8.0-openjdk-devel
+    javapackages-tools
     junit
 );
 $obj->clean_up();
@@ -37,7 +39,8 @@ $obj->docker( { cmd => [ 'cp', ".", "${CONTAINER}:source", ] } );
 my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
 # curl 'https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-31&arch=x86_64'
-sudo dnf -y install cmake gcc gcc-c++ git glibc-devel libcmocka-devel make perl-autodie perl-Path-Tiny python3-pip @deps
+# sudo dnf -y install cmake gcc gcc-c++ git glibc-devel libcmocka-devel make perl-autodie perl-Path-Tiny python3-pip @deps
+sudo dnf -y install git make perl-autodie perl-Path-Tiny @deps
 cd source
 . ./CLASSPATH-source-me.sh
 make
