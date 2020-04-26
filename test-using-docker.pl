@@ -46,6 +46,9 @@ EOSCRIPTTTTTTT
 $obj->exe_bash_code( { code => $script, } );
 $obj->clean_up();
 
+use Term::ANSIColor qw/ colored /;
+print colored( '== Success ==', 'green' );
+print "\n";
 __END__
 
 =head1 COPYRIGHT & LICENSE
