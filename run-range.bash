@@ -1,7 +1,7 @@
 set -x
 dir="$HOME/shirl-hart-solver"
 mkdir -p "$dir"
-for deal in `seq 1 100`
+for deal in `seq 1 11981`
 do
     fn="$dir/$deal.fc.board"
     if ! test -e "$fn"
