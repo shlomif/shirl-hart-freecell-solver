@@ -38,7 +38,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * */
-//src/main/tableau.java
+// src/main/tableau.java
 package main;
 
 import java.util.ArrayList;
@@ -53,7 +53,8 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
-public class Tableau {
+public class Tableau
+{
 
 	int[][] tableau;
 
@@ -61,20 +62,25 @@ public class Tableau {
 	private static final int MAXROWS = 21;
 	private static final int HOMEOFFSET = 4;
 
-	public static int rank (int ascii) { return ascii     & 15; }
-	public static int suit (int ascii) { return ascii >> 4 & 3; }
-	public static boolean oppositeColors (int src, int dst) {return (src & 16) != (dst & 16); }
-
-	public static boolean inSequence(int src, int dst) {
-		return rank(src) + 1 == rank(dst) &&  oppositeColors(src, dst);
+	public static int rank(int ascii) { return ascii & 15; }
+	public static int suit(int ascii) { return ascii >> 4 & 3; }
+	public static boolean oppositeColors(int src, int dst)
+	{
+		return (src & 16) != (dst & 16);
 	}
 
-	public static int fromCard (String str) {
+	public static boolean inSequence(int src, int dst)
+	{
+		return rank(src) + 1 == rank(dst) && oppositeColors(src, dst);
+	}
+
+	public static int fromCard(String str)
+	{
 		if (str.trim().isEmpty())
 			return 0;
 		else
-			return fromRank.get(str.substring(0,1)) +
-				   fromSuit.get(str.substring(1,2)) * 16 + 64;
+			return fromRank.get(str.substring(0, 1)) +
+			    fromSuit.get(str.substring(1, 2)) * 16 + 64;
 	}
 
 	private static final int COLUMNS_HEIGHT_OFFSET = 1;
@@ -82,203 +88,257 @@ public class Tableau {
 	private static final Pattern expression = Pattern.compile("(\\S\\S) ?");
 
 	private static final Map<String, Integer> fromSuit =
-				ImmutableMap.of("D", 0, "C", 1, "H", 2, "S", 3, " ", 0);
+	    ImmutableMap.of("D", 0, "C", 1, "H", 2, "S", 3, " ", 0);
 
-	private static final Map<String, Integer> fromRank = new ImmutableMap.Builder<String, Integer>()
-		.putAll(ImmutableMap.of("A",  1, "2",  2, "3",  3, "4",  4, "5",  5))
-		.putAll(ImmutableMap.of("6",  6, "7",  7, "8",  8, "9",  9, "T", 10))
-		.putAll(ImmutableMap.of("J", 11, "Q", 12, "K", 13, " ",  0))
+	private static final Map<String, Integer> fromRank =
+	    new ImmutableMap.Builder<String, Integer>()
+		.putAll(ImmutableMap.of("A", 1, "2", 2, "3", 3, "4", 4, "5", 5))
+		.putAll(
+		    ImmutableMap.of("6", 6, "7", 7, "8", 8, "9", 9, "T", 10))
+		.putAll(ImmutableMap.of("J", 11, "Q", 12, "K", 13, " ", 0))
 		.build();
 
 	private static final Map<Integer, String> toSuit =
-				ImmutableMap.of(0, "D", 1, "C", 2, "H", 3, "S");
+	    ImmutableMap.of(0, "D", 1, "C", 2, "H", 3, "S");
 
-	private static final Map<Integer, String> toRank = new ImmutableMap.Builder<Integer, String>()
-		.putAll(ImmutableMap.of( 1, "A",  2, "2",  3, "3",  4, "4",  5, "5"))
-		.putAll(ImmutableMap.of( 6, "6",  7, "7",  8, "8",  9, "9", 10, "T"))
+	private static final Map<Integer, String> toRank =
+	    new ImmutableMap.Builder<Integer, String>()
+		.putAll(ImmutableMap.of(1, "A", 2, "2", 3, "3", 4, "4", 5, "5"))
+		.putAll(
+		    ImmutableMap.of(6, "6", 7, "7", 8, "8", 9, "9", 10, "T"))
 		.putAll(ImmutableMap.of(11, "J", 12, "Q", 13, "K"))
 		.build();
 
 	private static final Map<Integer, String> ABCD =
-				ImmutableMap.of(0, "a", 1, "b", 2, "c", 3, "d");
+	    ImmutableMap.of(0, "a", 1, "b", 2, "c", 3, "d");
 
-//			  card->key     A    2    3    4    5    6    7    8    9    T    J    Q    K
-//			    ....0000 0001 0010 0011 0100 0101 0110 0111 1000 1001 1010 1011 1100 1101
-//		 64	  D 0100....    A    B    C    D    E    F    G    H    I    J    K    L    M
-//		 80	  C 0101....    Q    R    S    T    U    V    W    X    Y    Z    [    \    ]
-//		 96	  H 0110....    a    b    c    d    e    f    g    h    i    j    k    l    m
-//		112	  S 0111....    q    r    s    t    u    v    w    x    y    z    {    |    }
+	//			  card->key     A    2    3    4    5    6    7    8
+	//9    T    J    Q    K
+	//			    ....0000 0001 0010 0011 0100 0101 0110 0111 1000
+	//1001 1010 1011 1100 1101 		 64	  D 0100....    A    B    C    D    E F
+	//G    H    I    J    K    L    M 		 80	  C 0101....    Q    R    S T U
+	//V    W    X    Y    Z    [    \    ]
+	//		 96	  H 0110....    a    b    c    d    e    f    g
+	//h    i    j    k    l    m
+	//		112	  S 0111....    q    r    s    t    u    v    w
+	//x    y    z    {    |    }
 
+	public Tableau() { tableau = new int[8][21]; }
 
-	public Tableau (){
-
-		tableau = new int[8][21];
-	}
-
-	private void setTableauCard(int row, int height, int val) {
+	private void setTableauCard(int row, int height, int val)
+	{
 		tableau[row][COLUMNS_HEIGHT_OFFSET + height] = val;
 	}
 
-	public void deal (long seed){
+	public void deal(long seed)
+	{
 		int[] deck = new int[52];
-		for (int i = 0; i < 52; i++){
+		for (int i = 0; i < 52; i++)
+		{
 			deck[i] = i;
 		}
 
 		int wLeft = 52;
-		for (int i = 0; i < 52; i++){
-			seed = (seed * 214013L + 2531011L) % 2147483648L; // (long)Math.pow(2,31);
+		for (int i = 0; i < 52; i++)
+		{
+			seed = (seed * 214013L + 2531011L) %
+			       2147483648L; // (long)Math.pow(2,31);
 			int j = (int)(seed >> 16) % wLeft;
-			int val = 65 + deck[j] / 4 + 16 * // switch C & D
-					(deck[j] % 4 == 0 ? 1 : deck[j] % 4 == 1 ? 0 : deck[j] % 4);
+			int val =
+			    65 + deck[j] / 4 +
+			    16 * // switch C & D
+				(deck[j] % 4 == 0
+					? 1
+					: deck[j] % 4 == 1 ? 0 : deck[j] % 4);
 
 			setTableauCard(i % 8, i / 8, val);
 			deck[j] = deck[--wLeft];
 		}
 	}
 
-	public int[] heuristic () {
+	public int[] heuristic()
+	{
 
 		Helper h = new Helper(tableau);
 
 		int score = 64;
-		for (int c = HOMEOFFSET; c < MAXCOLS; c++){
+		for (int c = HOMEOFFSET; c < MAXCOLS; c++)
+		{
 			score -= rank(tableau[c][0]);
 		}
 		score -= h.ecount;
 		score -= h.fcount;
 
 		int seq = 0, brk = 0;
-		for (int c = 0; c < MAXCOLS; c++){
-			if (h.z[c] > 1){
-				for (int r = 1; r < h.z[c]; r++){
+		for (int c = 0; c < MAXCOLS; c++)
+		{
+			if (h.z[c] > 1)
+			{
+				for (int r = 1; r < h.z[c]; r++)
+				{
 					int dst = tableau[c][r];
 					int src = tableau[c][r + 1];
-					brk += inSequence(src, dst)  ? 0 : 1;
+					brk += inSequence(src, dst) ? 0 : 1;
 					seq += rank(src) < rank(dst) ? 0 : 1;
 				} // major sequence break if src >= dst
 			}
 		}
 
-        int recurse = 0;
-//		for (int c = 0; c < MAXCOLS; c++){
-//		        for (int r = 1; r  < h.z[c]; r++){
-//		                int rank = rank(tableau[c][r]);
-//		                recurse += (14 - rank) * (h.z[c] - r);
-//		        }
-//		}
+		int recurse = 0;
+		//		for (int c = 0; c < MAXCOLS; c++){
+		//		        for (int r = 1; r  < h.z[c]; r++){
+		//		                int rank = rank(tableau[c][r]);
+		//		                recurse += (14 - rank) * (h.z[c] -
+		//r);
+		//		        }
+		//		}
 
-        return new int[]{score + brk, score + brk + seq, score + recurse / 16};
+		return new int[] {
+		    score + brk, score + brk + seq, score + recurse / 16};
 	}
 
-	@Override
-	public String toString () {
+	@Override public String toString()
+	{
 		StringBuilder sb = new StringBuilder();
-		for (int r = 0; r < MAXROWS; r++) {
+		for (int r = 0; r < MAXROWS; r++)
+		{
 			boolean done = true;
-			for (int c = 0; c < MAXCOLS; c++){
-				if (tableau[c][r] == 0) {
+			for (int c = 0; c < MAXCOLS; c++)
+			{
+				if (tableau[c][r] == 0)
+				{
 					sb.append("   ");
-				} else {
-					sb.append(toRank.get( tableau[c][r]       & 15))
-					  .append(toSuit.get((tableau[c][r] >> 4) &  3))
-					  .append(" ");
+				}
+				else
+				{
+					sb.append(
+					      toRank.get(tableau[c][r] & 15))
+					    .append(toSuit.get(
+						(tableau[c][r] >> 4) & 3))
+					    .append(" ");
 					done = false;
 				}
 			}
 			sb.append("\r\n");
-			if (done && r > 0) break;
+			if (done && r > 0)
+				break;
 		}
 		sb.setLength(sb.length() - 28);
 		return sb.toString();
 	}
 
-	public void fromString(String input) {
+	public void fromString(String input)
+	{
 		String[] str = input.split("\r\n");
 		int r = 0;
-		for (int i = 0; i < str.length; i++) {
+		for (int i = 0; i < str.length; i++)
+		{
 			Matcher matcher = expression.matcher(str[i]);
 			int c = 0;
-			while (matcher.find()) {
+			while (matcher.find())
+			{
 				setTableauCard(c, r, fromCard(matcher.group()));
 				c++;
 			}
 			r++;
 		}
 
-//		# fix home if out of order
-//
-//	    my %home = map {
-//	        my $card = $self->[$_][0];
-//	        suit($card) + 4, $card;
-//	    } 4 .. 7;
-//	    foreach ( 4 .. 7 ) {
-//	        $self->[$_][0] = exists( $home{$_} ) ? $home{$_} : 0;
-//	    }
-//	    $self;
-
+		//		# fix home if out of order
+		//
+		//	    my %home = map {
+		//	        my $card = $self->[$_][0];
+		//	        suit($card) + 4, $card;
+		//	    } 4 .. 7;
+		//	    foreach ( 4 .. 7 ) {
+		//	        $self->[$_][0] = exists( $home{$_} ) ? $home{$_}
+		//: 0;
+		//	    }
+		//	    $self;
 	}
 
 	public void fromFcSolveString(String input)
 	{
 		String[] lines = input.split("\n");
-		for (int col_idx = 0; col_idx < lines.length; col_idx++) {
+		for (int col_idx = 0; col_idx < lines.length; col_idx++)
+		{
 			Matcher matcher = expression.matcher(lines[col_idx]);
 			int height = 0;
-			while (matcher.find()) {
-				setTableauCard(col_idx, height, fromCard(matcher.group()));
+			while (matcher.find())
+			{
+				setTableauCard(
+				    col_idx, height, fromCard(matcher.group()));
 				height++;
 			}
 		}
 	}
 
-	public void fromToken (Entry entry){
+	public void fromToken(Entry entry)
+	{
 		String[] cascades = entry.key.split(" ");
-		for (int i = 0; i < cascades[0].length(); i++){
-			tableau[entry.value.token[i]][0] = cascades[0].charAt(i);
+		for (int i = 0; i < cascades[0].length(); i++)
+		{
+			tableau[entry.value.token[i]][0] =
+			    cascades[0].charAt(i);
 		}
 
 		int offset = cascades[0].length() - 1;
-		for (int i = 1; i < cascades.length; i++){
-			for (int j = 0; j < cascades[i].length(); j++){
-				tableau[entry.value.token[i + offset]][j + 1] = cascades[i].charAt(j);
+		for (int i = 1; i < cascades.length; i++)
+		{
+			for (int j = 0; j < cascades[i].length(); j++)
+			{
+				tableau[entry.value.token[i + offset]][j + 1] =
+				    cascades[i].charAt(j);
 			}
 		}
 	}
 
-	public void play (Move move){
-		tableau[move.dstCol][move.dstRow] = tableau[move.srcCol][move.srcRow];
+	public void play(Move move)
+	{
+		tableau[move.dstCol][move.dstRow] =
+		    tableau[move.srcCol][move.srcRow];
 		tableau[move.srcCol][move.srcRow] = 0;
 	}
 
-	public void undo (ArrayList<Move> node){
+	public void undo(ArrayList<Move> node)
+	{
 		ListIterator<Move> i = node.listIterator(node.size());
-		while (i.hasPrevious()){
+		while (i.hasPrevious())
+		{
 			Move move = i.previous();
-			tableau[move.srcCol][move.srcRow] = tableau[move.dstCol][move.dstRow];
+			tableau[move.srcCol][move.srcRow] =
+			    tableau[move.dstCol][move.dstRow];
 
-			if (move.dstRow == 0
-			&&  move.dstCol >= HOMEOFFSET
-			&&  rank(tableau[move.dstCol][0]) > 1) { // homecell > Ace
+			if (move.dstRow == 0 && move.dstCol >= HOMEOFFSET &&
+			    rank(tableau[move.dstCol][0]) > 1)
+			{ // homecell > Ace
 				tableau[move.dstCol][move.dstRow]--;
-			} else {
+			}
+			else
+			{
 				tableau[move.dstCol][move.dstRow] = 0;
 			}
 		}
 	}
 
-	public void autoplay (ArrayList<Move> node){
+	public void autoplay(ArrayList<Move> node)
+	{
 		int safe = 1;
-		while (safe == 1) {
+		while (safe == 1)
+		{
 			safe = 0;
-			for (int c = 0; c < HOMEOFFSET; c++) {
+			for (int c = 0; c < HOMEOFFSET; c++)
+			{
 				int src = tableau[c][0];
 				if (src == 0)
 					continue;
 
-				if (rank(src) == rank(tableau[suit(src) + HOMEOFFSET][0]) + 1
-				&& (rank(src) < 3 || adjacentHomecells(src))) {
-					Move move = new Move(c, 0, suit(src) + HOMEOFFSET, 0, "afh");
+				if (rank(src) == rank(tableau[suit(src) +
+							      HOMEOFFSET][0]) +
+						     1 &&
+				    (rank(src) < 3 || adjacentHomecells(src)))
+				{
+					Move move = new Move(c, 0,
+					    suit(src) + HOMEOFFSET, 0, "afh");
 					node.add(move);
 					play(move);
 					safe = 1;
@@ -287,15 +347,20 @@ public class Tableau {
 
 			Helper h = new Helper(tableau);
 
-			for (int c = 0; c < MAXCOLS; c++) {
+			for (int c = 0; c < MAXCOLS; c++)
+			{
 				int r = h.z[c];
 				if (r == 0)
 					continue;
 				int src = tableau[c][r];
 
-				if (rank(src) == rank(tableau[suit(src) + HOMEOFFSET][0]) + 1
-				&& (rank(src) < 3 || adjacentHomecells(src))) {
-					Move move = new Move(c, r, suit(src) + HOMEOFFSET, 0, "ach");
+				if (rank(src) == rank(tableau[suit(src) +
+							      HOMEOFFSET][0]) +
+						     1 &&
+				    (rank(src) < 3 || adjacentHomecells(src)))
+				{
+					Move move = new Move(c, r,
+					    suit(src) + HOMEOFFSET, 0, "ach");
 					node.add(move);
 					play(move);
 					safe = 1;
@@ -304,103 +369,144 @@ public class Tableau {
 		}
 	}
 
-	public boolean adjacentHomecells (int src){
+	public boolean adjacentHomecells(int src)
+	{
 		boolean ok = false;
-		if ((src & 16) == 0
-		&& rank(src) <= rank(tableau[5][0]) + 1
-		&& rank(src) <= rank(tableau[7][0]) + 1
-		||  (src & 16) != 0
-		&& rank(src) <= rank(tableau[4][0]) + 1
-		&& rank(src) <= rank(tableau[6][0]) + 1)
+		if ((src & 16) == 0 && rank(src) <= rank(tableau[5][0]) + 1 &&
+			rank(src) <= rank(tableau[7][0]) + 1 ||
+		    (src & 16) != 0 && rank(src) <= rank(tableau[4][0]) + 1 &&
+			rank(src) <= rank(tableau[6][0]) + 1)
 			ok = true;
 		return ok;
 	}
 
-	public ArrayList<ArrayList<Move>> generateNodelist2 (boolean winxpopt){
-		ArrayList<ArrayList<Move>> nodelist = new ArrayList<ArrayList<Move>>();
+	public ArrayList<ArrayList<Move>> generateNodelist2(boolean winxpopt)
+	{
+		ArrayList<ArrayList<Move>> nodelist =
+		    new ArrayList<ArrayList<Move>>();
 		ArrayList<Move> node;
 
 		Helper h = new Helper(tableau);
 
 		// generate nodelist, src is freecell
-		for (int c = 0; c < HOMEOFFSET; c++){
+		for (int c = 0; c < HOMEOFFSET; c++)
+		{
 			int src = tableau[c][0];
 			if (src == 0)
 				continue;
 
-			if (rank(src) - 1 == rank(tableau[suit(src) + HOMEOFFSET][0])){
+			if (rank(src) - 1 ==
+			    rank(tableau[suit(src) + HOMEOFFSET][0]))
+			{
 				node = new ArrayList<Move>();
-				node.add(new Move(c, 0, suit(src) + HOMEOFFSET, 0, "fh"));
+				node.add(new Move(
+				    c, 0, suit(src) + HOMEOFFSET, 0, "fh"));
 				nodelist.add(node);
 			}
 
-			if (h.ecount > 0){
+			if (h.ecount > 0)
+			{
 				node = new ArrayList<Move>();
 				node.add(new Move(c, 0, h.eindex, 1, "fe"));
 				nodelist.add(node);
 			}
 
-			for (int j = 0; j < MAXCOLS; j++){
+			for (int j = 0; j < MAXCOLS; j++)
+			{
 				if (h.z[j] == 0)
 					continue;
 				int dst = tableau[j][h.z[j]];
 
-				if (inSequence(src, dst)){
+				if (inSequence(src, dst))
+				{
 					node = new ArrayList<Move>();
-					node.add(new Move(c, 0, j, h.z[j] + 1, "fc"));
+					node.add(new Move(
+					    c, 0, j, h.z[j] + 1, "fc"));
 					nodelist.add(node);
 				}
 			}
 		}
 
 		// generate nodelist, src is column
-		for (int c = 0; c < MAXCOLS; c++) {
+		for (int c = 0; c < MAXCOLS; c++)
+		{
 			if (h.z[c] == 0)
 				continue;
 			int src = tableau[c][h.z[c]];
 
-			if (rank(src) - 1 == rank(tableau[suit(src) + HOMEOFFSET][0])){
+			if (rank(src) - 1 ==
+			    rank(tableau[suit(src) + HOMEOFFSET][0]))
+			{
 				node = new ArrayList<Move>();
-				node.add(new Move(c, h.z[c], suit(src) + HOMEOFFSET, 0, "ch"));
+				node.add(new Move(c, h.z[c],
+				    suit(src) + HOMEOFFSET, 0, "ch"));
 				nodelist.add(node);
 			}
 
-			if (h.fcount > 0){
+			if (h.fcount > 0)
+			{
 				node = new ArrayList<Move>();
-				node.add(new Move(c, h.z[c], h.findex, 0, "cf"));
+				node.add(
+				    new Move(c, h.z[c], h.findex, 0, "cf"));
 				nodelist.add(node);
 			}
 			// super move to empty
-			if (h.ecount > 0){
-				for (int k = h.z[c]; k > 1; k--){ // don't move whole column to empty
-					if (!( h.z[c] == k || inSequence(tableau[c][k + 1], tableau[c][k]) )){
+			if (h.ecount > 0)
+			{
+				for (int k = h.z[c]; k > 1; k--)
+				{ // don't move whole column to empty
+					if (!(h.z[c] == k ||
+						inSequence(tableau[c][k + 1],
+						    tableau[c][k])))
+					{
 						break;
 					}
-					if ((winxpopt ? 1 : h.ecount) * (h.fcount + 1) > h.z[c] - k ) {
-						node = new ArrayList<Move>();  								// e*(f+1)
-						for (int x = k, y = 1; x <= h.z[c]; ){
-							node.add(new Move(c, x++, h.eindex, y++, "ce"));
+					if ((winxpopt ? 1 : h.ecount) *
+						(h.fcount + 1) >
+					    h.z[c] - k)
+					{
+						node = new ArrayList<
+						    Move>(); // e*(f+1)
+						for (int x = k, y = 1;
+						     x <= h.z[c];)
+						{
+							node.add(new Move(c,
+							    x++, h.eindex, y++,
+							    "ce"));
 						}
 						nodelist.add(node);
 					}
 				}
 			}
 			// super move to column
-			for (int j = 0; j < MAXCOLS; j++) {
-				if (c == j
-				||  h.z[j] == 0)
+			for (int j = 0; j < MAXCOLS; j++)
+			{
+				if (c == j || h.z[j] == 0)
 					continue;
 
-				for (int k = h.z[c]; k > 0; k--){
-					if (!( h.z[c] == k || inSequence(tableau[c][k + 1], tableau[c][k]) )){
+				for (int k = h.z[c]; k > 0; k--)
+				{
+					if (!(h.z[c] == k ||
+						inSequence(tableau[c][k + 1],
+						    tableau[c][k])))
+					{
 						break;
 					}
 
-					if (inSequence(tableau[c][k], tableau[j][h.z[j]])
-					&& ((winxpopt ? Math.min(1, h.ecount) : h.ecount) + 1) * (h.fcount + 1) > h.z[c] - k){
-						node = new ArrayList<Move>(); 								// (e+1)*(f+1)
-						for (int x = k, y = h.z[j] + 1; x <= h.z[c]; ){
-							node.add(new Move(c, x++, j, y++, "cc"));
+					if (inSequence(tableau[c][k],
+						tableau[j][h.z[j]]) &&
+					    ((winxpopt ? Math.min(1, h.ecount)
+						       : h.ecount) +
+						1) * (h.fcount + 1) >
+						h.z[c] - k)
+					{
+						node = new ArrayList<
+						    Move>(); // (e+1)*(f+1)
+						for (int x = k, y = h.z[j] + 1;
+						     x <= h.z[c];)
+						{
+							node.add(new Move(c,
+							    x++, j, y++, "cc"));
 						}
 						nodelist.add(node);
 						break;
@@ -411,7 +517,8 @@ public class Tableau {
 		return nodelist;
 	}
 
-	public String notation (Entry entry){
+	public String notation(Entry entry)
+	{
 		List<String> result = new ArrayList<String>();
 		Tableau note = new Tableau();
 
@@ -429,85 +536,117 @@ public class Tableau {
 		String dscDst = new String();
 
 		// autoplay notation
-		Map<Integer, ArrayList<String>> autoPlay = new HashMap<Integer, ArrayList<String>>();
+		Map<Integer, ArrayList<String>> autoPlay =
+		    new HashMap<Integer, ArrayList<String>>();
 		List<String> autoSrc = new ArrayList<String>();
 
 		boolean first = true;
-		for (Move move : entry.value.node){
-			if (first) {
-				first   = false;
-				stdSrc  = move.srcRow > 0          ? Integer.toString(move.srcCol + 1)
-												   : ABCD.get(move.srcCol);
+		for (Move move : entry.value.node)
+		{
+			if (first)
+			{
+				first = false;
+				stdSrc = move.srcRow > 0
+					     ? Integer.toString(move.srcCol + 1)
+					     : ABCD.get(move.srcCol);
 
-				stdDst  = move.dstRow > 0          ? Integer.toString(move.dstCol + 1)
-						: move.dstCol < HOMEOFFSET ? ABCD.get(move.dstCol)
-												   : "h";
+				stdDst = move.dstRow > 0
+					     ? Integer.toString(move.dstCol + 1)
+					     : move.dstCol < HOMEOFFSET
+						   ? ABCD.get(move.dstCol)
+						   : "h";
 
-				dscDst  = move.dstRow == 1         ? "e"
-						: stdDst.matches("\\d")    ? note.toCard(move.dstCol, move.dstRow - 1)
-						: stdDst.equals("h")       ? "h"
-												   : "f";
+				dscDst =
+				    move.dstRow == 1
+					? "e"
+					: stdDst.matches("\\d")
+					      ? note.toCard(move.dstCol,
+						    move.dstRow - 1)
+					      : stdDst.equals("h") ? "h" : "f";
 			}
 
-			int homeSuit = suit(note.tableau[move.srcCol][move.srcRow]);
-			if(move.origin.startsWith("a")){ // autoplay to home
-				if ( autoPlay.containsKey(homeSuit) ){
-					autoPlay.get(homeSuit).add(note.toCard(move.srcCol,move.srcRow));
-				} else {
-					ArrayList<String> cardArray = new ArrayList<String>();
-					cardArray.add(note.toCard(move.srcCol, move.srcRow));
+			int homeSuit =
+			    suit(note.tableau[move.srcCol][move.srcRow]);
+			if (move.origin.startsWith("a"))
+			{ // autoplay to home
+				if (autoPlay.containsKey(homeSuit))
+				{
+					autoPlay.get(homeSuit).add(note.toCard(
+					    move.srcCol, move.srcRow));
+				}
+				else
+				{
+					ArrayList<String> cardArray =
+					    new ArrayList<String>();
+					cardArray.add(note.toCard(
+					    move.srcCol, move.srcRow));
 					autoPlay.put(homeSuit, cardArray);
 				}
-			} else {
-				dscSrc.add(note.toCard(move.srcCol, move.srcRow));
+			}
+			else
+			{
+				dscSrc.add(
+				    note.toCard(move.srcCol, move.srcRow));
 			}
 			note.play(move);
 		}
-		for (Map.Entry<Integer, ArrayList<String>> suitArray : autoPlay.entrySet()){
+		for (Map.Entry<Integer, ArrayList<String>> suitArray :
+		    autoPlay.entrySet())
+		{
 			ArrayList<String> cardArray = suitArray.getValue();
-			autoSrc.add(cardArray.get(0) + (cardArray.size() > 1 ?
-				"-" + Iterables.getLast(cardArray) : ""));
+			autoSrc.add(cardArray.get(0) +
+				    (cardArray.size() > 1
+					    ? "-" + Iterables.getLast(cardArray)
+					    : ""));
 		}
 
 		result.add(Integer.toString(entry.value.depth));
 		result.add(stdSrc + stdDst);
-		result.add(dscSrc.get(0) + (dscSrc.size() > 1 ?
-			"-" + Iterables.getLast(dscSrc) : ""));
+		result.add(
+		    dscSrc.get(0) +
+		    (dscSrc.size() > 1 ? "-" + Iterables.getLast(dscSrc) : ""));
 		result.add(dscDst);
-		result.add(autoSrc.size() > 0 ?
-			Joiner.on(';').join(autoSrc.toArray()) : "");
+		result.add(autoSrc.size() > 0
+			       ? Joiner.on(';').join(autoSrc.toArray())
+			       : "");
 
 		return Joiner.on('|').join(result.toArray());
 	}
 
-	public String toCard(Integer c, Integer r){
-		return  toRank.get( tableau[c][r]       & 15) +
-				toSuit.get((tableau[c][r] >> 4) &  3);
+	public String toCard(Integer c, Integer r)
+	{
+		return toRank.get(tableau[c][r] & 15) +
+		    toSuit.get((tableau[c][r] >> 4) & 3);
 	}
 
-	public class Helper {
-		int eindex = -1; // first empty column index
-		int ecount =  0; // count of empty columns
-		int findex = -1; // first freecell index
-		int fcount =  0; // count of empty freecells
+	public class Helper
+	{
+		int eindex = -1;	    // first empty column index
+		int ecount = 0;		    // count of empty columns
+		int findex = -1;	    // first freecell index
+		int fcount = 0;		    // count of empty freecells
 		int[] z = new int[MAXCOLS]; // cascade depth
 
-		public Helper(int[][] tableau) {
-			for (int c = 0; c < MAXCOLS; c++) {
-				for (int r = 1; r < MAXROWS; r++) {
+		public Helper(int[][] tableau)
+		{
+			for (int c = 0; c < MAXCOLS; c++)
+			{
+				for (int r = 1; r < MAXROWS; r++)
+				{
 					if (tableau[c][r] == 0)
 						break;
 					z[c] = r;
 				}
 
-				if (c < HOMEOFFSET
-				&& tableau[c][0] == 0) {
+				if (c < HOMEOFFSET && tableau[c][0] == 0)
+				{
 					fcount++;
 					if (findex < 0)
 						findex = c;
 				}
 
-				if (tableau[c][1] == 0) {
+				if (tableau[c][1] == 0)
+				{
 					ecount++;
 					if (eindex < 0)
 						eindex = c;

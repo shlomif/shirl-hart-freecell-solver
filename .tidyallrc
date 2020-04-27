@@ -1,0 +1,10 @@
+[ClangFormat]
+select = **/*.java
+
+[PerlTidy]
+argv = -ci=4 -bl -cti=0
+ignore = rinutils/**/* **/scripts/err-on-unbuilt-executable.pl **/{cmpdigest,valgrind,verify}--*.t
+select = **/*.{pl,pm,t}
+
+[TestCount]
+select = **/*.t
