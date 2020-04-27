@@ -112,16 +112,16 @@ public class Tableau
 	private static final Map<Integer, String> ABCD =
 	    ImmutableMap.of(0, "a", 1, "b", 2, "c", 3, "d");
 
-	//			  card->key     A    2    3    4    5    6    7    8
-	//9    T    J    Q    K
-	//			    ....0000 0001 0010 0011 0100 0101 0110 0111 1000
-	//1001 1010 1011 1100 1101 		 64	  D 0100....    A    B    C    D    E F
-	//G    H    I    J    K    L    M 		 80	  C 0101....    Q    R    S T U
-	//V    W    X    Y    Z    [    \    ]
-	//		 96	  H 0110....    a    b    c    d    e    f    g
-	//h    i    j    k    l    m
+	//			  card->key     A    2    3    4    5    6    7
+	//8 9    T    J    Q    K
+	//			    ....0000 0001 0010 0011 0100 0101 0110 0111
+	//1000
+	// 1001 1010 1011 1100 1101 		 64	  D 0100....    A    B
+	// C    D    E F G    H    I    J    K    L    M 		 80
+	// C 0101....    Q    R    S T U V    W    X    Y    Z    [    \    ] 		 96
+	//H 0110....    a    b    c    d    e    f    g h    i    j    k    l m
 	//		112	  S 0111....    q    r    s    t    u    v    w
-	//x    y    z    {    |    }
+	// x    y    z    {    |    }
 
 	public Tableau() { tableau = new int[8][21]; }
 
@@ -133,13 +133,13 @@ public class Tableau
 	public void deal(long seed)
 	{
 		int[] deck = new int[52];
-		for (int i = 0; i < 52; i++)
+		for (int i = 0; i < 52; ++i)
 		{
 			deck[i] = i;
 		}
 
 		int wLeft = 52;
-		for (int i = 0; i < 52; i++)
+		for (int i = 0; i < 52; ++i)
 		{
 			seed = (seed * 214013L + 2531011L) %
 			       2147483648L; // (long)Math.pow(2,31);
@@ -162,7 +162,7 @@ public class Tableau
 		Helper h = new Helper(tableau);
 
 		int score = 64;
-		for (int c = HOMEOFFSET; c < MAXCOLS; c++)
+		for (int c = HOMEOFFSET; c < MAXCOLS; ++c)
 		{
 			score -= rank(tableau[c][0]);
 		}
@@ -170,11 +170,11 @@ public class Tableau
 		score -= h.fcount;
 
 		int seq = 0, brk = 0;
-		for (int c = 0; c < MAXCOLS; c++)
+		for (int c = 0; c < MAXCOLS; ++c)
 		{
 			if (h.z[c] > 1)
 			{
-				for (int r = 1; r < h.z[c]; r++)
+				for (int r = 1; r < h.z[c]; ++r)
 				{
 					int dst = tableau[c][r];
 					int src = tableau[c][r + 1];
@@ -185,11 +185,11 @@ public class Tableau
 		}
 
 		int recurse = 0;
-		//		for (int c = 0; c < MAXCOLS; c++){
-		//		        for (int r = 1; r  < h.z[c]; r++){
+		//		for (int c = 0; c < MAXCOLS; ++c){
+		//		        for (int r = 1; r  < h.z[c]; ++r){
 		//		                int rank = rank(tableau[c][r]);
-		//		                recurse += (14 - rank) * (h.z[c] -
-		//r);
+		//		                recurse += (14 - rank) * (h.z[c]
+		//- r);
 		//		        }
 		//		}
 
@@ -200,10 +200,10 @@ public class Tableau
 	@Override public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		for (int r = 0; r < MAXROWS; r++)
+		for (int r = 0; r < MAXROWS; ++r)
 		{
 			boolean done = true;
-			for (int c = 0; c < MAXCOLS; c++)
+			for (int c = 0; c < MAXCOLS; ++c)
 			{
 				if (tableau[c][r] == 0)
 				{
@@ -231,16 +231,16 @@ public class Tableau
 	{
 		String[] str = input.split("\r\n");
 		int r = 0;
-		for (int i = 0; i < str.length; i++)
+		for (int i = 0; i < str.length; ++i)
 		{
 			Matcher matcher = expression.matcher(str[i]);
 			int c = 0;
 			while (matcher.find())
 			{
 				setTableauCard(c, r, fromCard(matcher.group()));
-				c++;
+				++c;
 			}
-			r++;
+			++r;
 		}
 
 		//		# fix home if out of order
@@ -259,7 +259,7 @@ public class Tableau
 	public void fromFcSolveString(String input)
 	{
 		String[] lines = input.split("\n");
-		for (int col_idx = 0; col_idx < lines.length; col_idx++)
+		for (int col_idx = 0; col_idx < lines.length; ++col_idx)
 		{
 			Matcher matcher = expression.matcher(lines[col_idx]);
 			int height = 0;
@@ -267,7 +267,7 @@ public class Tableau
 			{
 				setTableauCard(
 				    col_idx, height, fromCard(matcher.group()));
-				height++;
+				++height;
 			}
 		}
 	}
@@ -275,16 +275,16 @@ public class Tableau
 	public void fromToken(Entry entry)
 	{
 		String[] cascades = entry.key.split(" ");
-		for (int i = 0; i < cascades[0].length(); i++)
+		for (int i = 0; i < cascades[0].length(); ++i)
 		{
 			tableau[entry.value.token[i]][0] =
 			    cascades[0].charAt(i);
 		}
 
 		int offset = cascades[0].length() - 1;
-		for (int i = 1; i < cascades.length; i++)
+		for (int i = 1; i < cascades.length; ++i)
 		{
-			for (int j = 0; j < cascades[i].length(); j++)
+			for (int j = 0; j < cascades[i].length(); ++j)
 			{
 				tableau[entry.value.token[i + offset]][j + 1] =
 				    cascades[i].charAt(j);
@@ -311,7 +311,7 @@ public class Tableau
 			if (move.dstRow == 0 && move.dstCol >= HOMEOFFSET &&
 			    rank(tableau[move.dstCol][0]) > 1)
 			{ // homecell > Ace
-				tableau[move.dstCol][move.dstRow]--;
+				--tableau[move.dstCol][move.dstRow];
 			}
 			else
 			{
@@ -326,7 +326,7 @@ public class Tableau
 		while (safe == 1)
 		{
 			safe = 0;
-			for (int c = 0; c < HOMEOFFSET; c++)
+			for (int c = 0; c < HOMEOFFSET; ++c)
 			{
 				int src = tableau[c][0];
 				if (src == 0)
@@ -347,7 +347,7 @@ public class Tableau
 
 			Helper h = new Helper(tableau);
 
-			for (int c = 0; c < MAXCOLS; c++)
+			for (int c = 0; c < MAXCOLS; ++c)
 			{
 				int r = h.z[c];
 				if (r == 0)
@@ -389,7 +389,7 @@ public class Tableau
 		Helper h = new Helper(tableau);
 
 		// generate nodelist, src is freecell
-		for (int c = 0; c < HOMEOFFSET; c++)
+		for (int c = 0; c < HOMEOFFSET; ++c)
 		{
 			int src = tableau[c][0];
 			if (src == 0)
@@ -411,7 +411,7 @@ public class Tableau
 				nodelist.add(node);
 			}
 
-			for (int j = 0; j < MAXCOLS; j++)
+			for (int j = 0; j < MAXCOLS; ++j)
 			{
 				if (h.z[j] == 0)
 					continue;
@@ -428,7 +428,7 @@ public class Tableau
 		}
 
 		// generate nodelist, src is column
-		for (int c = 0; c < MAXCOLS; c++)
+		for (int c = 0; c < MAXCOLS; ++c)
 		{
 			if (h.z[c] == 0)
 				continue;
@@ -453,7 +453,7 @@ public class Tableau
 			// super move to empty
 			if (h.ecount > 0)
 			{
-				for (int k = h.z[c]; k > 1; k--)
+				for (int k = h.z[c]; k > 1; --k)
 				{ // don't move whole column to empty
 					if (!(h.z[c] == k ||
 						inSequence(tableau[c][k + 1],
@@ -479,12 +479,12 @@ public class Tableau
 				}
 			}
 			// super move to column
-			for (int j = 0; j < MAXCOLS; j++)
+			for (int j = 0; j < MAXCOLS; ++j)
 			{
 				if (c == j || h.z[j] == 0)
 					continue;
 
-				for (int k = h.z[c]; k > 0; k--)
+				for (int k = h.z[c]; k > 0; --k)
 				{
 					if (!(h.z[c] == k ||
 						inSequence(tableau[c][k + 1],
@@ -523,8 +523,8 @@ public class Tableau
 		Tableau note = new Tableau();
 
 		// dclone tableau
-		for (int c = 0; c < MAXCOLS; c++)
-			for (int r = 0; r < MAXROWS; r++)
+		for (int c = 0; c < MAXCOLS; ++c)
+			for (int r = 0; r < MAXROWS; ++r)
 				note.tableau[c][r] = this.tableau[c][r];
 
 		// standard notation
@@ -629,9 +629,9 @@ public class Tableau
 
 		public Helper(int[][] tableau)
 		{
-			for (int c = 0; c < MAXCOLS; c++)
+			for (int c = 0; c < MAXCOLS; ++c)
 			{
-				for (int r = 1; r < MAXROWS; r++)
+				for (int r = 1; r < MAXROWS; ++r)
 				{
 					if (tableau[c][r] == 0)
 						break;
@@ -640,14 +640,14 @@ public class Tableau
 
 				if (c < HOMEOFFSET && tableau[c][0] == 0)
 				{
-					fcount++;
+					++fcount;
 					if (findex < 0)
 						findex = c;
 				}
 
 				if (tableau[c][1] == 0)
 				{
-					ecount++;
+					++ecount;
 					if (eindex < 0)
 						eindex = c;
 				}

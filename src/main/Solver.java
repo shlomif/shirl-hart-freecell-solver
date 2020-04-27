@@ -165,8 +165,8 @@ public class Solver
 		//		load();
 		// TODO debug #38
 		//		for (Map.Entry<String, String> s:
-		//set.entrySet()){ 				System.out.println(s.getValue() +","+
-		//s.getKey());
+		// set.entrySet()){
+		// System.out.println(s.getValue() +","+ s.getKey());
 		//			}
 		//		System.out.println(set);
 		//		System.exit(1);
@@ -238,7 +238,7 @@ public class Solver
 						midscore[0] &&
 					    entry.value.score[1] > midscore[1]
 					    //		entry.value.score[2] >
-					    //midscore[2]
+					    // midscore[2]
 					)
 						continue;
 					// TODO needs to use MAXSTATS
@@ -274,10 +274,11 @@ public class Solver
 				stats = new Stats(MAXSTATS);
 				nextstack = new ArrayList<Entry>();
 				// TODO debug #38
-				//				int numberOfKeys =
-				//0; 				for (Map.Entry<String, String> s:
-				//set.entrySet()) 					if
-				//(position.containsKey(s.getKey())){
+				//				int numberOfKeys
+				//=
+				// 0; 				for (Map.Entry<String,
+				// String> s: set.entrySet())
+				// if (position.containsKey(s.getKey())){
 				//						numberOfKeys++;
 				//						System.out.println(s.getValue()
 				//+","+ s.getKey());
@@ -292,9 +293,10 @@ public class Solver
 					// 					if
 					// (set.containsKey(entry.key)
 					//					&&
-					//Integer.parseInt(set.get(entry.key))
-					//== depth 						)
-					//System.out.println(set.get(entry.key)
+					// Integer.parseInt(set.get(entry.key))
+					//== depth
+					//)
+					// System.out.println(set.get(entry.key)
 					//+","+ entry.key);
 
 					tableau = new Tableau();
@@ -316,6 +318,7 @@ public class Solver
 					for (TreeMap<Integer, Integer> stat :
 					    stats.get())
 						logger.log(stat.toString());
+				++depth;
 				depth++;
 			}
 			if (solution.size() > 0)
@@ -380,6 +383,7 @@ public class Solver
 				backtrack(entry);
 				found = true;
 			}
+			++cnt;
 			cnt++;
 			tableau.undo(node);
 			if (found)
@@ -459,9 +463,9 @@ public class Solver
 				Tableau tableau = new Tableau();
 				tableau.fromToken(entry);
 				int z[] = new int[8];
-				for (int c = 0; c < 8; c++)
+				for (int c = 0; c < 8; ++c)
 				{
-					for (int r = 1; r < 21; r++)
+					for (int r = 1; r < 21; ++r)
 					{
 						if (tableau.tableau[c][r] == 0)
 							break;

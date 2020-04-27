@@ -54,7 +54,7 @@ public class Stats
 	{
 		MAXSTATS = maxstats;
 		scoresArray = new ArrayList<TreeMap<Integer, Integer>>();
-		for (int i = 0; i < MAXSTATS; i++)
+		for (int i = 0; i < MAXSTATS; ++i)
 		{
 			scoresArray.add(new TreeMap<Integer, Integer>());
 		}
@@ -67,7 +67,7 @@ public class Stats
 
 	public void put(int[] score)
 	{
-		for (int i = 0; i < MAXSTATS; i++)
+		for (int i = 0; i < MAXSTATS; ++i)
 		{
 			TreeMap<Integer, Integer> stat = scoresArray.get(i);
 			if (stat.containsKey(score[i]))
@@ -86,7 +86,7 @@ public class Stats
 	public int[] findHiScores()
 	{
 		int[] hiscores = new int[MAXSTATS];
-		for (int i = 0; i < MAXSTATS; i++)
+		for (int i = 0; i < MAXSTATS; ++i)
 		{
 			hiscores[i] = scoresArray.get(i).lastKey();
 		}
@@ -96,7 +96,7 @@ public class Stats
 	public int[] findLoScores()
 	{
 		int[] loscores = new int[MAXSTATS];
-		for (int i = 0; i < MAXSTATS; i++)
+		for (int i = 0; i < MAXSTATS; ++i)
 		{
 			loscores[i] = scoresArray.get(i).firstKey();
 		}
@@ -107,7 +107,7 @@ public class Stats
 	{
 		int[] midcount = new int[MAXSTATS];
 		int[] midscore = new int[MAXSTATS];
-		for (int i = 0; i < MAXSTATS; i++)
+		for (int i = 0; i < MAXSTATS; ++i)
 		{
 			TreeMap<Integer, Integer> sa = scoresArray.get(i);
 			for (Map.Entry<Integer, Integer> scores : sa.entrySet())

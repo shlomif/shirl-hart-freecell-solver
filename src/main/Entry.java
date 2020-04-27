@@ -62,7 +62,7 @@ public class Entry
 		this.key = line[0];
 		this.value = new Value();
 
-		for (int i = 1; i < line.length; i++)
+		for (int i = 1; i < line.length; ++i)
 			value.token[i - 1] = Integer.parseInt(line[i]);
 	}
 
@@ -79,7 +79,7 @@ public class Entry
 		this.value = new Value();
 		this.value.token = new int[16];
 
-		for (int c = 0; c < MAXCOLS; c++)
+		for (int c = 0; c < MAXCOLS; ++c)
 		{
 			int i = tableau.tableau[c][0];
 			if (i != 0)
@@ -96,9 +96,9 @@ public class Entry
 		key = Joiner.on("").join(map.keySet());
 		map.clear();
 
-		for (int c = 0; c < MAXCOLS; c++)
+		for (int c = 0; c < MAXCOLS; ++c)
 		{
-			for (int r = 1; r < MAXROWS; r++)
+			for (int r = 1; r < MAXROWS; ++r)
 			{
 				int i = tableau.tableau[c][r];
 				if (i == 0)
