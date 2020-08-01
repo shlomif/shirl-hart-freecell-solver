@@ -40,10 +40,11 @@ my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
 # curl 'https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-31&arch=x86_64'
 # sudo dnf -y install cmake gcc gcc-c++ git glibc-devel libcmocka-devel make perl-autodie perl-Path-Tiny python3-pip @deps
-sudo dnf -y install git make perl-autodie perl-Path-Tiny @deps
+sudo dnf -y install freecell-solver git make perl-autodie perl-Path-Tiny perl-Test-Harness 'perl(Test::More)' @deps
 cd source
 . ./CLASSPATH-source-me.sh
 make
+make test
 EOSCRIPTTTTTTT
 
 $obj->exe_bash_code( { code => $script, } );
