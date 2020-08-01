@@ -319,7 +319,6 @@ public class Solver
 					    stats.get())
 						logger.log(stat.toString());
 				++depth;
-				depth++;
 			}
 			if (solution.size() > 0)
 			{
@@ -384,7 +383,6 @@ public class Solver
 				found = true;
 			}
 			++cnt;
-			cnt++;
 			tableau.undo(node);
 			if (found)
 				break;

@@ -16,5 +16,7 @@ java_bins: $(JAVA_BINS)
 $(JAVA_BINS): bin/%.class: src/%.java
 	javac -Xlint:deprecation -d bin $(JAVA_SRCS)
 
-.PHONY: java_bins
+.PHONY: java_bins test
 
+test: all
+	prove tests/*.t
