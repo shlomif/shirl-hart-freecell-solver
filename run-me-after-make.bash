@@ -7,7 +7,7 @@
 #
 
 export CLASSPATH="$CLASSPATH:$PWD/bin"
-cmd='java -d64 -Xmx4g main.Solver'
+cmd='java -Xmx4g main.Solver'
 
 if test -n "$1"
 then
