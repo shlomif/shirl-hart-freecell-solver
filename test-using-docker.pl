@@ -8,7 +8,7 @@ use autodie;
 use Docker::CLI::Wrapper::Container v0.0.4 ();
 use Term::ANSIColor qw/ colored /;
 
-my $SYS       = "fedora:39";
+my $SYS       = "fedora:41";
 my $CONTAINER = "shirl_hart_solver_fedora";
 my $obj       = Docker::CLI::Wrapper::Container->new(
     { container => $CONTAINER, sys => $SYS, }, );
@@ -25,6 +25,7 @@ $obj->run_docker();
 $obj->docker( { cmd => [ 'cp', ".", "${CONTAINER}:source", ] } );
 my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
+sudo dnf -y upgrade --refresh
 sudo dnf -y install freecell-solver git make perl-autodie perl-Path-Tiny perl-Test-Harness 'perl(Test::More)' @deps
 cd source
 . ./CLASSPATH-source-me.sh
